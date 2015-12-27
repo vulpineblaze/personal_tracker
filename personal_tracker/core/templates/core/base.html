@@ -1,0 +1,73 @@
+{% load staticfiles %}
+{% load static %}
+
+
+
+{% csrf_token %}
+<html lang="en-US">
+<meta charset="UTF-8">
+
+    <Title>
+        TITLE
+    </title>
+  <head>
+
+
+    
+
+
+  <!DOCTYPE HTML>
+
+
+</head>
+
+<body>
+
+<!-- Begin Wrapper -->
+<div id="wrapper">
+
+
+{% if user.is_authenticated %}
+            <h1><font color="#c9731f">Welcome, {{ user.first_name }}.</font></h1>
+            Your last login was: {{ user.last_login}}
+            <a href="/logout/">Logout</a>
+        {%elif  display_type == "Login" %}
+        {% else %}
+            <h1><font color="#c9731f">Welcome, Guest!</font></h1>
+            <p>Please ..
+                <a href="/register/" id="id_register">|Register|</a> or 
+                <a href="/login/" id="id_login">|Login|</a>
+            </p>
+        {% endif %}
+
+{% block user_zone %}
+{% endblock %}
+
+
+    <!-- Begin Content # -->
+        <div id="content">
+            
+            
+                {% block content %}
+                {% endblock %}
+           
+
+        </div>
+        
+        
+    
+    <div class="clear"></div>
+	<!-- End Content -->
+
+
+    
+	
+</div>
+<!-- End Wrapper -->
+<div class="clear"></div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+{% load static %}
+{% load staticfiles %}
+
+{% csrf_token %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+
+  <!-- Begin Content -->
+  
+    
+<!--     <P>
+      {{ frontpage.main_text|safe }}
+    </P>
+
+    <div class="clear"></div>
+     -->
+
+
+
+
+  {% for object in object_list %}
+
+    <P>
+      {{ frontpage.main_text|safe }}
+    </P>
+
+  {% endfor %}
+    
+    <div class="clear"></div>
+    
+    <!-- <div class="line"></div> -->
+  <!-- End Content -->
+
+<!-- 
+    <div class="clear"></div> -->
+
+
+{%endblock%}
