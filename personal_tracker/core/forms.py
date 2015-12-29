@@ -80,3 +80,17 @@ class UserForm(forms.ModelForm):
         if valid_text != "":
             raise ValidationError(valid_text)
         return self.cleaned_data
+
+
+
+class NewEntryForm(forms.ModelForm):
+    """ Creates a Form for the generic top-level assets """
+
+    int_entry = forms.IntegerField(label="Integer",required=False)
+    float_entry = forms.FloatField(label="Float",required=False)
+    text_entry = forms.CharField(widget=forms.Textarea, label="Text",required=False)
+
+    class Meta:
+        model = Entry
+        fields = ('int_entry', 'float_entry','text_entry')
+

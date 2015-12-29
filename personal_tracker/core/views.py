@@ -1,6 +1,6 @@
 from django.shortcuts import render, render_to_response, get_object_or_404
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.template import RequestContext
 
@@ -13,7 +13,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
-
+from datetime import datetime
+from datetime import timedelta
 
 def home(request):
     """ """
@@ -28,13 +29,13 @@ def index(request):
 
     goal_tuple = tuple(goal.id for goal in goal_list)
 
-    entry_list = Entry.objects.filter(goal__in=goal_tuple).order_by('-pub_date')
+    # entry_list = Entry.objects.filter(goal__in=goal_tuple).order_by('-pub_date')
     # product_list = Product.objects.filter(is_active=True,
     #                                  #frontpage=True,
     #                                  brand__is_active=True,
     #                                  ).order_by('-priority','-created')
 
-    context = {'entry_list': entry_list,'goal_list':goal_list}
+    context = {'goal_list':goal_list}
     return render(request, 'core/index.html', context)
 
 @login_required
@@ -63,6 +64,107 @@ def entry_index(request, goal_id):
 
     context = {'entry_list': entry_list}
     return render(request, 'core/entry_index.html', context)
+
+
+
+def new_entry(request, goal_id):
+    """  Page for making new entries. """
+
+    form_action = "/new_entry/"
+
+    if request.method == 'POST':
+        form = NewEntryForm(request.POST)
+        if form.is_valid():
+            # record = form.save(commit = False)
+            # change the stuffs here
+            # node_data = {parent:None, name:"", desc:"" }
+            dt_now = datetime.now()
+            this_goal = Goal.objects.get(id=goal_id)
+
+            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
+
+            # record.save()
+            # new_entry.pub_date = datetime.now()
+            # new_entry.goal = Goal.objects.get(id=goal_id)
+            new_entry.int_entry = form.cleaned_data['int_entry']
+            new_entry.float_entry = form.cleaned_data['float_entry']
+            new_entry.text_entry = form.cleaned_data['text_entry']
+
+            if not new_entry.int_entry and not new_entry.float_entry and not new_entry.text_entry:
+                new_entry.int_entry = 0
+
+            new_entry.save()
+
+          
+
+
+            # form.save()
+            # return HttpResponseRedirect('/index/')
+            return HttpResponseRedirect('/')
+    else:
+        form = NewEntryForm()
+
+    return render(request, 'core/new_entry.html', {'form': form,'action':'new_entry'})
+
+
+
+
+
+
+
+
+
+
+
+
+def all_entries(request):
+    """  Page for making new entries. """
+
+    form_action = "/new_entry/"
+
+    goal_list = Goal.objects.filter(user=request.user).order_by('short_name')
+
+    if request.method == 'POST':
+        # form = NewEntryForm(request.POST)
+        # if form.is_valid():
+        #     # record = form.save(commit = False)
+        #     # change the stuffs here
+        #     # node_data = {parent:None, name:"", desc:"" }
+        #     dt_now = datetime.now()
+        #     this_goal = Goal.objects.get(id=goal_id)
+
+        #     new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
+
+        #     # record.save()
+        #     # new_entry.pub_date = datetime.now()
+        #     # new_entry.goal = Goal.objects.get(id=goal_id)
+        #     new_entry.int_entry = form.cleaned_data['int_entry']
+        #     new_entry.float_entry = form.cleaned_data['float_entry']
+        #     new_entry.text_entry = form.cleaned_data['text_entry']
+
+        #     if not new_entry.int_entry and not new_entry.float_entry and not new_entry.text_entry:
+        #         new_entry.int_entry = 0
+
+        #     new_entry.save()
+
+          
+
+
+        #     # form.save()
+        #     return HttpResponseRedirect('/index/')
+        pass
+    else:
+        form = NewEntryForm()
+
+    context = {'form': form, 'form_action':form_action, 'action':'new_entry', 'goal_list':goal_list}
+    return render(request, 'core/all_entries.html', context)
+
+
+
+
+
+
+
 
 
 

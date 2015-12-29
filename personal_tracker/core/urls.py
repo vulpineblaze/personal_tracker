@@ -8,10 +8,14 @@ from . import views
 
 
 urlpatterns = patterns('',
-	url(r'^$', views.home, name='home'),
+  # url(r'^$', views.home, name='home'),
+	url(r'^$', views.all_entries, name='all_entries'),
     url(r'^goals/$', views.goal_index, name='goal_index'), # ADD NEW PATTERN!
     url(r'^index/$', views.index, name='index'), # ADD NEW PATTERN!
     url(r'^goal/(?P<goal_id>\d+)/$', views.entry_index, name='entry_index'), # ADD NEW PATTERN!
+    url(r'^new_entry/(?P<goal_id>\d+)/$', views.new_entry, name='new_entry'), # ADD NEW PATTERN!
+    url(r'^all_entries/$', views.all_entries, name='all_entries'), # ADD NEW PATTERN!
+
 
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),

@@ -17,7 +17,7 @@ class Goal(models.Model):
     is_private = models.BooleanField(default=False)
 
 class Entry(models.Model):
-    int_entry = models.IntegerField(default=0)
+    int_entry = models.IntegerField(blank=True,null=True,default=0)
     float_entry = models.FloatField(blank=True,null=True)
     text_entry = models.CharField(blank=True,null=True,max_length=1500)
     pub_date = models.DateTimeField('date published')

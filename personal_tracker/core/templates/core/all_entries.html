@@ -1,0 +1,251 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+{% load static %}
+{% load staticfiles %}
+
+{% csrf_token %}
+
+
+
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
+<!-- jQuery -->
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'core/style.css' %}" />
+<script type="text/javascript" charset="utf8" src="{% static 'core/personal_tracker.js' %}"></script>
+
+
+
+<!-- 
+  <table id="index_table" class="display" cellspacing="0" width="100%">
+
+      <tbody>
+        {% for goal in goal_list %}
+          <tr>
+            <form action="{{ form_action }}{{goal.id}}/" method="post">
+              {% csrf_token %}
+
+              <td>{{form.int_entry.label}}{{form.int_entry}}<BR>
+              {{form.float_entry.label}}{{form.float_entry}}<BR>
+              {{form.text_entry.label}}{{form.text_entry}}<BR>
+              </td>
+              <td>
+              {% if action == "edit" %}
+                {{ form.assets.name }}{{ form.assets }}
+                <BR>
+              {% else %}
+                <div style="display:none;">{{ form.assets.name }}{{ form.assets }}</div>
+              {%endif%}
+
+              <input type="submit" value="Save" />
+              </td>
+            </form>
+
+            <td>{{goal.short_name}}</td>
+            {% for entry in goal.entries.all|dictsortreversed:"pub_date" %}
+              <td>{{ entry.pub_date|date:"P D, M d" }}</td>
+              <td>{% firstof  entry.int_entry entry.float_entry entry.text_entry  %}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+ -->
+
+<div class="border">
+  {% for goal in goal_list %}
+    <div class="row border">
+      <div class="column "><div class="border ">
+        <form action="{{ form_action }}{{goal.id}}/" method="post">
+          {% csrf_token %}
+
+          
+          {{form.int_entry.label}}{{form.int_entry}}<BR>
+          {{form.float_entry.label}}{{form.float_entry}}<BR>
+          {{form.text_entry.label}}{{form.text_entry}}<BR>
+          
+          
+          {% if action == "edit" %}
+            {{ form.assets.name }}{{ form.assets }}
+            
+          {% else %}
+            <div style="display:none;">{{ form.assets.name }}{{ form.assets }}</div>
+          {%endif%}
+
+          <input type="submit" value="Save" />
+          
+        </form>
+      </div></div>
+        <div class="columnSpace"></div>
+
+      <div class="column "><div class="border ">
+        <h1>{{goal.short_name}}</h1>
+        {% for entry in goal.entries.all|dictsortreversed:"pub_date"|slice:":4" %}
+          <div class="column">
+            <div class="row border">
+              {{ entry.pub_date|date:"P" }}
+              </BR>
+              {{ entry.pub_date|date:"D, M d" }}
+              </BR>
+              <h1>{% firstof  entry.int_entry entry.float_entry entry.text_entry  %}</h1>
+            </div>
+            
+          </div>
+          <div class="rowSpace"></div>
+        {% endfor %}
+      </div></div>
+    </div>
+    <div class="rowSpace"></div>
+  {% endfor %}
+</div>
+
+
+
+
+
+<!-- 
+
+<div class="row">
+    <div class="column">
+        <div class="border">Column 1</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 2</div>
+    </div>
+</div>
+<div class="rowSpace"></div>
+<div class="row">
+    <div class="column">
+        <div class="border">Column 1
+            <br />Line 1
+            <br />Line 2
+            <br />Line 3
+            <br />Line 4
+            <br />Line 5
+            <br />Line 6
+            <br />Line 7
+            <br />
+        </div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 2</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 3</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 4</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 5</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 6</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 7</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 8</div>
+    </div>
+</div>
+<div class="rowSpace"></div>
+<div class="row">
+    <div class="column">
+        <div class="border">Column 1</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 2
+            <br />Line 1
+            <br />Line 2
+            <br />Line 3</div>
+    </div>
+    <div class="columnSpace"></div>
+    <div class="column">
+        <div class="border">Column 3</div>
+    </div>
+</div>
+
+
+
+ -->
+
+
+{%endblock%}
+
+
+
+<!-- 
+
+<table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Garrett Winters</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>63</td>
+                <td>2011/07/25</td>
+                <td>$170,750</td>
+            </tr>
+            <tr>
+                <td>Ashton Cox</td>
+                <td>Junior Technical Author</td>
+                <td>San Francisco</td>
+                <td>66</td>
+                <td>2009/01/12</td>
+                <td>$86,000</td>
+            </tr>
+            <tr>
+                <td>Donna Snider</td>
+                <td>Customer Support</td>
+                <td>New York</td>
+                <td>27</td>
+                <td>2011/01/25</td>
+                <td>$112,000</td>
+            </tr>
+        </tbody>
+    </table> -->

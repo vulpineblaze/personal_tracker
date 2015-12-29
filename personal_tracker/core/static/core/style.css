@@ -1,0 +1,74 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+.goal_list {
+    /*background-color:black;
+    color:white;
+    margin:20px;
+    padding:20px;*/
+    border: 1px solid black;
+    padding:10px;
+    margin:10px;
+}
+
+
+.goal_form_cell {
+    border: 1px solid black;
+    padding:10px;
+    margin:10px;
+} 
+
+.goal_cell {
+    border: 1px solid black;
+    padding:10px;
+    margin:10px;
+} 
+
+.goal_inner {
+    border: 1px solid black;
+    padding:10px;
+    margin:10px;
+} 
+
+
+  .row {
+      display: table;
+      table-layout: fixed;
+      width: 95%;
+      margin: 0 auto;
+  }
+  .row div {
+      display: table-cell;
+  }
+  .column {
+      border: 0px;
+      margin: 0 auto;
+      padding: 0px;
+      text-align: center;
+      overflow: auto;
+      vertical-align: top;
+  }
+  .border {
+      padding: 5px;
+      border: 1px solid;
+      -moz-border-radius: 15px;
+      border-radius: 15px;
+      border-color: grey;
+      border-color: grey;
+      box-shadow: grey .25em .25em .25em;
+      -webkit-gradient: grey .25em .25em .25em;
+      -moz-linear-gradient: grey .25em .25em .25em;
+      vertical-align: top;
+      text-align: center;
+      overflow: auto;
+      margin: 0 auto;
+      width: 65em;
+      max-width: 65em;
+  }
+  .columnSpace {
+      width: 10px;
+  }
+  .rowSpace {
+      height: 10px;
+  }
