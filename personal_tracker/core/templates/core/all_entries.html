@@ -63,14 +63,11 @@
   {% for goal in goal_list %}
     <div class="row border">
       <div class="column "><div class="border ">
+        <h1>{{goal.short_name}}</h1>
         <form action="{{ form_action }}{{goal.id}}/" method="post">
           {% csrf_token %}
 
-          
-          {{form.int_entry.label}}{{form.int_entry}}<BR>
-          {{form.float_entry.label}}{{form.float_entry}}<BR>
-          {{form.text_entry.label}}{{form.text_entry}}<BR>
-          
+          {{form.text_entry}}<BR>
           
           {% if action == "edit" %}
             {{ form.assets.name }}{{ form.assets }}
@@ -86,7 +83,7 @@
         <div class="columnSpace"></div>
 
       <div class="column "><div class="border ">
-        <h1>{{goal.short_name}}</h1>
+        
         {% for entry in goal.entries.all|dictsortreversed:"pub_date"|slice:":4" %}
           <div class="column">
             <div class="row border">
@@ -94,7 +91,14 @@
               </BR>
               {{ entry.pub_date|date:"D, M d" }}
               </BR>
-              <h1>{% firstof  entry.int_entry entry.float_entry entry.text_entry  %}</h1>
+              
+              {% if entry.int_entry %}
+                  <h1>{{ entry.int_entry }}</h1>
+              {% elif entry.float_entry  %}
+                  <h1>{{ entry.float_entry  }}</h1>
+              {% elif entry.text_entry %}
+                  <P>{{ entry.text_entry }}</P>
+              {% endif %}
             </div>
             
           </div>

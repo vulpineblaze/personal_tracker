@@ -94,3 +94,17 @@ class NewEntryForm(forms.ModelForm):
         model = Entry
         fields = ('int_entry', 'float_entry','text_entry')
 
+
+class UnifiedEntryForm(forms.ModelForm):
+    """ Creates a Form for the generic top-level assets """
+
+    # int_entry = forms.IntegerField(label="Integer",required=False)
+    # float_entry = forms.FloatField(label="Float",required=False)
+    text_entry = forms.CharField(widget=forms.Textarea(attrs={'cols': 40, 'rows': 5}),
+                                label="Text",
+                                required=False)
+
+    class Meta:
+        model = Entry
+        fields = ('text_entry',)
+

@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 
 from datetime import datetime
 from datetime import timedelta
+from django.utils import timezone
 
 def home(request):
     """ """
@@ -73,22 +74,31 @@ def new_entry(request, goal_id):
     form_action = "/new_entry/"
 
     if request.method == 'POST':
-        form = NewEntryForm(request.POST)
+        form = UnifiedEntryForm(request.POST)
         if form.is_valid():
-            # record = form.save(commit = False)
-            # change the stuffs here
-            # node_data = {parent:None, name:"", desc:"" }
-            dt_now = datetime.now()
+
+            dt_now = timezone.now()
             this_goal = Goal.objects.get(id=goal_id)
 
             new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
 
-            # record.save()
-            # new_entry.pub_date = datetime.now()
-            # new_entry.goal = Goal.objects.get(id=goal_id)
-            new_entry.int_entry = form.cleaned_data['int_entry']
-            new_entry.float_entry = form.cleaned_data['float_entry']
-            new_entry.text_entry = form.cleaned_data['text_entry']
+
+
+            # new_entry.int_entry = form.cleaned_data['int_entry']
+            # new_entry.float_entry = form.cleaned_data['float_entry']
+            # new_entry.text_entry = form.cleaned_data['text_entry']
+
+            s = form.cleaned_data['text_entry']
+
+            try:
+                new_entry.int_entry = int(s)
+            except ValueError:
+                try:
+                    new_entry.float_entry = float(s)
+                except ValueError:
+                    new_entry.text_entry = s
+
+
 
             if not new_entry.int_entry and not new_entry.float_entry and not new_entry.text_entry:
                 new_entry.int_entry = 0
@@ -102,7 +112,7 @@ def new_entry(request, goal_id):
             # return HttpResponseRedirect('/index/')
             return HttpResponseRedirect('/')
     else:
-        form = NewEntryForm()
+        form = UnifiedEntryForm()
 
     return render(request, 'core/new_entry.html', {'form': form,'action':'new_entry'})
 
@@ -122,7 +132,10 @@ def all_entries(request):
 
     form_action = "/new_entry/"
 
-    goal_list = Goal.objects.filter(user=request.user).order_by('short_name')
+    if request.user.is_authenticated():
+        goal_list = Goal.objects.filter(user=request.user).order_by('short_name')
+    else:
+        return HttpResponseRedirect('/login/')
 
     if request.method == 'POST':
         # form = NewEntryForm(request.POST)
@@ -154,7 +167,7 @@ def all_entries(request):
         #     return HttpResponseRedirect('/index/')
         pass
     else:
-        form = NewEntryForm()
+        form = UnifiedEntryForm()
 
     context = {'form': form, 'form_action':form_action, 'action':'new_entry', 'goal_list':goal_list}
     return render(request, 'core/all_entries.html', context)
