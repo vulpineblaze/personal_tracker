@@ -16,4 +16,70 @@ python manage.py createsuperuser
 
  python manage.py makemigrations core
  python manage.py migrate
- 
+
+
+sudo groupadd --system webapps
+sudo useradd --system --gid webapps --shell /bin/bash --home /webapps/hello_django hello
+
+
+$ sudo mkdir -p /webapps/hello_django/
+$ sudo chown hello /webapps/hello_django/
+
+ sudo su - hello
+ cd /webapps/hello_django/
+ virtualenv .
+ source bin/activate
+
+
+#not for use:
+ sudo su - hello 
+ cd /webapps/hello_django/
+ source bin/activate
+
+
+ # pip install gunicorn
+
+ cp /home/ubuntu/django_projs/personal_tracker/gunicorn_start.bash .
+chmod 777 gunicorn_start.bash
+
+
+ sudo apt-get install supervisor
+ mkdir -p /webapps/hello_django/logs/
+ touch /webapps/hello_django/logs/gunicorn_supervisor.log
+
+  sudo cp hello.conf /etc/supervisor/conf.d/hello.conf
+  sudo supervisorctl reread
+  sudo supervisorctl update
+  sudo supervisorctl status hello  
+
+#   $ sudo supervisorctl stop hello  
+# $ sudo supervisorctl start hello                        
+# $ sudo supervisorctl restart hello 
+
+
+sudo apt-get install nginx
+
+ sudo cp /home/ubuntu/django_projs/personal_tracker/per_trk.nginxconf /etc/nginx/sites-available/.
+
+sudo ln -s /etc/nginx/sites-available/per_trk /etc/nginx/sites-enabled/per_trk
+
+ sudo service nginx restart 
+
+
+sudo cp sites-available/default sites-available/default.bak
+
+sudo rm sites-enabled/default  sites-available/default 
+sudo cp sites-available/per_trk.nginxconf sites-available/per_trk
+
+ sudo service nginx restart 
+
+
+
+#static testing
+   sudo cp /home/ubuntu/django_projs/personal_tracker/per_trk.nginxconf /etc/nginx/sites-available/. ; sudo supervisorctl restart hello  ;  sudo service nginx restart 
+
+# to make static:
+# must be in env as hello
+yes | python /webapps/hello_django/personal_tracker/manage.py collectstatic
+# must be sudo'er
+sudo cp -r livestatic/* static/.

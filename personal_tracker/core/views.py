@@ -67,6 +67,94 @@ def entry_index(request, goal_id):
     return render(request, 'core/entry_index.html', context)
 
 
+def find_what_was_there(local_int, local_float, local_str):
+    if local_str:
+        return "string", local_str
+    elif local_float:
+        return "float", local_float
+    elif local_int:
+        return "int", local_int
+    else:
+        return "none", ""
+
+def string_to_number_maybe(the_input):
+    s = the_input
+    local_int=''
+    local_float=''
+    local_str=''
+
+    try:
+        local_int = int(s)
+    except ValueError:
+        try:
+            local_float = float(s)
+        except ValueError:
+            local_str = s
+
+    return find_what_was_there(local_int, local_float, local_str)
+
+def figure_out_what_entry_goes_where(new_entry, the_type, value , was_type, was_value):
+
+    if was_type is "string":
+        new_entry.text_entry = was_value  + " | " + str(value)
+    elif was_type is "float":
+        if the_type is "string":
+            new_entry.text_entry = str(was_value) + " | " + str(value)
+            new_entry.float_entry = 0.0
+        elif the_type is "float":
+            new_entry.float_entry = was_value + value
+        elif the_type is "int":
+            new_entry.float_entry = was_value + float(value)
+    elif was_type is "int":
+        if the_type is "string":
+            new_entry.text_entry = str(was_value)  + " | " + str(value)
+            new_entry.int_entry = 0
+        elif the_type is "float":
+            new_entry.float_entry = float(was_value) + value
+            new_entry.int_entry = 0
+        elif the_type is "int":
+            new_entry.int_entry = was_value + value
+    else:
+        if the_type is "string":
+            new_entry.text_entry = value
+        elif the_type is "float":
+            new_entry.float_entry =  value
+        elif the_type is "int":
+            new_entry.int_entry =  value
+
+    return new_entry
+
+
+
+
+def new_goal(request):
+    """  Page for making new entries. """
+
+    form_action = "/new_goal/"
+
+    if request.method == 'POST':
+        form = GoalForm(request.POST)
+        if form.is_valid():
+
+            new_goal = Goal.objects.create(user=request.user)
+
+            new_goal.short_name = form.cleaned_data['short_name']
+            new_goal.long_desc = form.cleaned_data['long_desc']
+            new_goal.is_private = form.cleaned_data['is_private']
+
+
+            new_goal.save()
+
+
+            return HttpResponseRedirect('/')
+    else:
+        form = GoalForm()
+
+    return render(request, 'core/new_goal.html', {'form': form,'action':'new_goal'})
+
+
+
+
 
 def new_entry(request, goal_id):
     """  Page for making new entries. """
@@ -80,41 +168,74 @@ def new_entry(request, goal_id):
             dt_now = timezone.now()
             this_goal = Goal.objects.get(id=goal_id)
 
-            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
-
-
-
-            # new_entry.int_entry = form.cleaned_data['int_entry']
-            # new_entry.float_entry = form.cleaned_data['float_entry']
-            # new_entry.text_entry = form.cleaned_data['text_entry']
-
-            s = form.cleaned_data['text_entry']
-
             try:
-                new_entry.int_entry = int(s)
-            except ValueError:
-                try:
-                    new_entry.float_entry = float(s)
-                except ValueError:
-                    new_entry.text_entry = s
+                last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date')[0]
+            except:
+                last_entry=''
+
+            if last_entry and last_entry.pub_date.date() ==  dt_now.date() and last_entry.goal == this_goal:
+                new_entry = last_entry
+            else:
+                new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
 
 
 
-            if not new_entry.int_entry and not new_entry.float_entry and not new_entry.text_entry:
-                new_entry.int_entry = 0
+            the_type, value = string_to_number_maybe(form.cleaned_data['text_entry'])
+
+            was_type, was_value = find_what_was_there( new_entry.int_entry,  new_entry.float_entry,  new_entry.text_entry)
+            
+            new_entry = figure_out_what_entry_goes_where(new_entry, the_type, value , was_type, was_value)
+
+
+
 
             new_entry.save()
 
-          
 
-
-            # form.save()
-            # return HttpResponseRedirect('/index/')
             return HttpResponseRedirect('/')
     else:
         form = UnifiedEntryForm()
 
     return render(request, 'core/new_entry.html', {'form': form,'action':'new_entry'})
+
+
+def plus_one(request, goal_id):
+    """  Page for making new entries. """
+
+
+    dt_now = timezone.now()
+    this_goal = Goal.objects.get(id=goal_id)
+
+    try:
+        last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date')[0]
+        if last_entry and (last_entry.pub_date.date() ==  dt_now.date()) and (last_entry.goal == this_goal):
+            new_entry = last_entry
+            was_type, was_value = find_what_was_there( last_entry.int_entry,  last_entry.float_entry,  last_entry.text_entry)
+
+            if was_type is "string":
+                new_entry.text_entry = was_value +" | 1" 
+            elif was_type is "float":
+                new_entry.float_entry = was_value + 1.0
+            elif was_type is "int":
+                new_entry.int_entry = was_value+ 1
+            else:
+                new_entry.int_entry = 1
+        else:
+            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=1)
+
+        new_entry.save()
+
+    except:
+        # int_entry has to be zero to get initial val of 1, no clue why
+        Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=0).save()
+
+
+    
+
+
+    return HttpResponseRedirect('/')
+
+
 
 
 

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'gunicorn',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -130,7 +131,11 @@ APPEND_SLASH = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = '/webapps/hello_django/livestatic/'
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
+    # os.path.join(BASE_DIR, "static"),
+    # '/var/www/static/',
+    # '/webapps/hello_django/personal_tracker/core/static/',
+    '/webapps/hello_django/static/',
 ]

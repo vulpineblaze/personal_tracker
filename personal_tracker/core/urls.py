@@ -12,8 +12,10 @@ urlpatterns = patterns('',
 	url(r'^$', views.all_entries, name='all_entries'),
     url(r'^goals/$', views.goal_index, name='goal_index'), # ADD NEW PATTERN!
     url(r'^index/$', views.index, name='index'), # ADD NEW PATTERN!
+    url(r'^new_goal/$', views.new_goal, name='new_goal'), # ADD NEW PATTERN!
     url(r'^goal/(?P<goal_id>\d+)/$', views.entry_index, name='entry_index'), # ADD NEW PATTERN!
     url(r'^new_entry/(?P<goal_id>\d+)/$', views.new_entry, name='new_entry'), # ADD NEW PATTERN!
+    url(r'^plus_one/(?P<goal_id>\d+)/$', views.plus_one, name='plus_one'), # ADD NEW PATTERN!
     url(r'^all_entries/$', views.all_entries, name='all_entries'), # ADD NEW PATTERN!
 
 

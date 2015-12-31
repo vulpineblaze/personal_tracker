@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+{% load static %}
+{% load staticfiles %}
+
+
+
+
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{{form.errors}}
+<form action="{{ form_action }}" method="post">
+{% csrf_token %}
+
+{{form.short_name.label}}{{form.short_name}}<BR>
+{{form.long_desc.label}}{{form.long_desc}}<BR>
+{{form.is_private.label}}{{form.is_private}}<BR>
+
+{% if action == "edit" %}
+	{{ form.assets.name }}{{ form.assets }}
+	<BR>
+{% else %}
+	<div style="display:none;">{{ form.assets.name }}{{ form.assets }}</div>
+{%endif%}
+
+<input type="submit" value="Save" />
+</form>
+
+
+
+
+{%endblock%}

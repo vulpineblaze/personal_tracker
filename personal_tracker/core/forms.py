@@ -7,9 +7,10 @@ from core.models import *
 
 class GoalForm(forms.ModelForm):
     """ Creates a Form for the generic top-level assets """
-    name = forms.CharField(label="Name")
-    desc = forms.CharField(widget=forms.Textarea
+    short_name = forms.CharField(label="Name")
+    long_desc = forms.CharField(widget=forms.Textarea
                                 ,label="Desc") 
+    is_private = forms.BooleanField(label="Make This Private",required=False)
 
     class Meta:
         model = Goal

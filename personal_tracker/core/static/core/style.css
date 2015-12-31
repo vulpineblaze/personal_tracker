@@ -31,44 +31,77 @@ table, th, td {
     margin:10px;
 } 
 
+.text_cell {
+  /*overflow: auto;*/
+/*  height: 2em;
+  max-height: 2em;
+  display: -webkit-box;
+  overflow : hidden;
+  text-overflow: ellipsis
+  -webkit-line-clamp: number_of_lines_you_want;
+  -webkit-box-orient: vertical;*/
+}
 
-  .row {
-      display: table;
-      table-layout: fixed;
-      width: 95%;
-      margin: 0 auto;
-  }
-  .row div {
-      display: table-cell;
-  }
-  .column {
-      border: 0px;
-      margin: 0 auto;
-      padding: 0px;
-      text-align: center;
-      overflow: auto;
-      vertical-align: top;
-  }
-  .border {
-      padding: 5px;
-      border: 1px solid;
-      -moz-border-radius: 15px;
-      border-radius: 15px;
-      border-color: grey;
-      border-color: grey;
-      box-shadow: grey .25em .25em .25em;
-      -webkit-gradient: grey .25em .25em .25em;
-      -moz-linear-gradient: grey .25em .25em .25em;
-      vertical-align: top;
-      text-align: center;
-      overflow: auto;
-      margin: 0 auto;
-      width: 65em;
-      max-width: 65em;
-  }
-  .columnSpace {
-      width: 10px;
-  }
-  .rowSpace {
-      height: 10px;
-  }
+.row {
+    display: table;
+    table-layout: fixed;
+    width: 95%;
+    margin: 0 auto;
+}
+.row div {
+    display: table-cell;
+}
+.column {
+    border: 0px;
+    margin: 0 auto;
+    padding: 0px;
+    text-align: center;
+    overflow: auto;
+    vertical-align: top;
+}
+.border {
+    padding: 5px;
+    border: 1px solid;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border-color: grey;
+    border-color: grey;
+    box-shadow: grey .25em .25em .25em;
+    -webkit-gradient: grey .25em .25em .25em;
+    -moz-linear-gradient: grey .25em .25em .25em;
+    vertical-align: top;
+    text-align: center;
+    overflow: auto;
+    margin: 0 auto;
+    width: 65em;
+    max-width: 65em;
+}
+.columnSpace {
+    width: 10px;
+}
+.rowSpace {
+    height: 10px;
+}
+
+.input_button {
+  width: 3em;
+  height: 1.5em;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  border-radius: 25px; 
+  font-size: 2em;
+  position: absolute;
+
+  text-decoration: none; /* No underlines on the link */
+  z-index: 10; /* Places the link above everything else in the div */
+  background-color: #FFF; /* Fix to make div clickable in IE */
+  opacity: 0; /* Fix to make div clickable in IE */
+  filter: alpha(opacity=1); /* Fix to make div clickable in IE */
+}
+
+.float_left{
+    float:left;
+}​
+.float_right{
+    float:right;
+}​
