@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 
 
 class Goal(models.Model):
+    def __unicode__(self):
+       return 'Goal: ' + self.short_name
     short_name = models.CharField(max_length=120)
     long_desc = models.CharField(max_length=2000)
     # pub_date = models.DateTimeField('date published')
@@ -17,6 +19,8 @@ class Goal(models.Model):
     is_private = models.BooleanField(default=False)
 
 class Entry(models.Model):
+    def __unicode__(self):
+       return 'Entry: ' + str(self.pub_date)
     int_entry = models.IntegerField(blank=True,null=True,default=0)
     float_entry = models.FloatField(blank=True,null=True)
     text_entry = models.CharField(blank=True,null=True,max_length=1500)

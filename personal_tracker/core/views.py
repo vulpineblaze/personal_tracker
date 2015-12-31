@@ -145,6 +145,9 @@ def new_goal(request):
 
             new_goal.save()
 
+            dt_now = timezone.localtime(timezone.now())
+            new_entry = Entry.objects.create(pub_date=dt_now,goal=new_goal,int_entry=0)
+            new_entry.save()
 
             return HttpResponseRedirect('/')
     else:
@@ -165,11 +168,11 @@ def new_entry(request, goal_id):
         form = UnifiedEntryForm(request.POST)
         if form.is_valid():
 
-            dt_now = timezone.now()
+            dt_now = timezone.localtime(timezone.now())
             this_goal = Goal.objects.get(id=goal_id)
 
             try:
-                last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date')[0]
+                last_entry = Entry.objects.last()
             except:
                 last_entry=''
 
@@ -203,11 +206,11 @@ def plus_one(request, goal_id):
     """  Page for making new entries. """
 
 
-    dt_now = timezone.now()
+    dt_now = timezone.localtime(timezone.now())
     this_goal = Goal.objects.get(id=goal_id)
 
     try:
-        last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date')[0]
+        last_entry = Entry.objects.last()
         if last_entry and (last_entry.pub_date.date() ==  dt_now.date()) and (last_entry.goal == this_goal):
             new_entry = last_entry
             was_type, was_value = find_what_was_there( last_entry.int_entry,  last_entry.float_entry,  last_entry.text_entry)
@@ -221,7 +224,7 @@ def plus_one(request, goal_id):
             else:
                 new_entry.int_entry = 1
         else:
-            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=1)
+            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=0)
 
         new_entry.save()
 
@@ -259,33 +262,6 @@ def all_entries(request):
         return HttpResponseRedirect('/login/')
 
     if request.method == 'POST':
-        # form = NewEntryForm(request.POST)
-        # if form.is_valid():
-        #     # record = form.save(commit = False)
-        #     # change the stuffs here
-        #     # node_data = {parent:None, name:"", desc:"" }
-        #     dt_now = datetime.now()
-        #     this_goal = Goal.objects.get(id=goal_id)
-
-        #     new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
-
-        #     # record.save()
-        #     # new_entry.pub_date = datetime.now()
-        #     # new_entry.goal = Goal.objects.get(id=goal_id)
-        #     new_entry.int_entry = form.cleaned_data['int_entry']
-        #     new_entry.float_entry = form.cleaned_data['float_entry']
-        #     new_entry.text_entry = form.cleaned_data['text_entry']
-
-        #     if not new_entry.int_entry and not new_entry.float_entry and not new_entry.text_entry:
-        #         new_entry.int_entry = 0
-
-        #     new_entry.save()
-
-          
-
-
-        #     # form.save()
-        #     return HttpResponseRedirect('/index/')
         pass
     else:
         form = UnifiedEntryForm()
