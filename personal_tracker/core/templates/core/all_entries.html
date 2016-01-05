@@ -101,7 +101,7 @@ $(document).ready(function() {
 
       <div class="column "><div class="border ">
         
-        {% for entry in goal.entries.all|dictsortreversed:"pub_date"|slice:":4" %}
+        {% for entry in goal.entries.all|dictsortreversed:"pub_date"|slice:":3" %}
           <div class="column">
             <div class="row border">
               {{ entry.pub_date|date:"D, M d" }}
