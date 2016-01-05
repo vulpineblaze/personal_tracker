@@ -172,11 +172,11 @@ def new_entry(request, goal_id):
             this_goal = Goal.objects.get(id=goal_id)
 
             try:
-                last_entry = Entry.objects.last()
+                last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date').first()
             except:
                 last_entry=''
 
-            if last_entry and last_entry.pub_date.date() ==  dt_now.date() and last_entry.goal == this_goal:
+            if last_entry and (last_entry.pub_date.date() ==  dt_now.date()) and (last_entry.goal == this_goal):
                 new_entry = last_entry
             else:
                 new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal)
@@ -210,8 +210,13 @@ def plus_one(request, goal_id):
     this_goal = Goal.objects.get(id=goal_id)
 
     try:
-        last_entry = Entry.objects.last()
-        if last_entry and (last_entry.pub_date.date() ==  dt_now.date()) and (last_entry.goal == this_goal):
+        with open("/webapps/hello_django/logs/views.py.txt", "a") as myfile:
+            myfile.write("dt_now: "+str(dt_now)+",goal: "+str(this_goal)+"\n")
+            last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date')
+            myfile.write("last_entry: "+str(last_entry)+"\n")
+
+        last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date').first()
+        if last_entry and (timezone.localtime(last_entry.pub_date).date() ==  dt_now.date()) and (last_entry.goal == this_goal):
             new_entry = last_entry
             was_type, was_value = find_what_was_there( last_entry.int_entry,  last_entry.float_entry,  last_entry.text_entry)
 
@@ -224,12 +229,13 @@ def plus_one(request, goal_id):
             else:
                 new_entry.int_entry = 1
         else:
-            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=0)
+            new_entry = Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=1)
 
         new_entry.save()
 
     except:
         # int_entry has to be zero to get initial val of 1, no clue why
+        
         Entry.objects.create(pub_date=dt_now,goal=this_goal,int_entry=0).save()
 
 
