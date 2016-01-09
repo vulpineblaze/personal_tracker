@@ -171,6 +171,14 @@ def new_entry(request, goal_id):
             dt_now = timezone.localtime(timezone.now())
             this_goal = Goal.objects.get(id=goal_id)
 
+            with open("/webapps/hello_django/logs/views.py.txt", "a") as myfile:
+                myfile.write("new entry: dt_now: "+str(dt_now.date())+"\ngoal: "+str(this_goal)+"\n")
+                last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date').first()
+                myfile.write("last_entry: "+str(last_entry)+"\n")
+                myfile.write("pure dt_now: "+str(dt_now)+"\n")
+                myfile.write("pure pub_date: "+str(last_entry.pub_date)+"\n")
+                myfile.write("tz pub_date: "+str(timezone.localtime(last_entry.pub_date))+"\n\n")
+
             try:
                 last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date').first()
             except:
@@ -211,12 +219,17 @@ def plus_one(request, goal_id):
 
     try:
         with open("/webapps/hello_django/logs/views.py.txt", "a") as myfile:
-            myfile.write("dt_now: "+str(dt_now)+",goal: "+str(this_goal)+"\n")
-            last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date')
+            myfile.write("plus one: dt_now: "+str(dt_now.date())+"\ngoal: "+str(this_goal)+"\n")
+            last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date').first()
             myfile.write("last_entry: "+str(last_entry)+"\n")
+            myfile.write("pure dt_now: "+str(dt_now)+"\n")
+            myfile.write("pure pub_date: "+str(last_entry.pub_date)+"\n")
+            myfile.write("tz pub_date: "+str(timezone.localtime(last_entry.pub_date))+"\n\n")
+
+            # myfile.write(built_string)
 
         last_entry = Entry.objects.filter(goal=this_goal).order_by('-pub_date').first()
-        if last_entry and (timezone.localtime(last_entry.pub_date).date() ==  dt_now.date()) and (last_entry.goal == this_goal):
+        if last_entry and (last_entry.pub_date.date() ==  dt_now.date()) and (last_entry.goal == this_goal):
             new_entry = last_entry
             was_type, was_value = find_what_was_there( last_entry.int_entry,  last_entry.float_entry,  last_entry.text_entry)
 
